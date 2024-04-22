@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import './provider/task_provider.dart';
 import 'addtask.dart';
 
-class TaskScreen extends StatefulWidget {
-  @override
-  _TaskScreenState createState() => _TaskScreenState();
-}
-
-class _TaskScreenState extends State<TaskScreen> {
-  List<String> tasks = [];
-
+class TaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TaskModel taskModel = Provider.of<TaskModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Tarefas'),
@@ -28,9 +25,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 );
 
                 if (newTask != null) {
-                  setState(() {
-                    tasks.add(newTask);
-                  });
+                  taskModel.addTask(newTask); // Adiciona a nova tarefa via Provider
                 }
               },
               child: Text('Adicionar Tarefa'),
@@ -53,14 +48,12 @@ class _TaskScreenState extends State<TaskScreen> {
                   SizedBox(height: 20.0),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: tasks.length,
+                      itemCount: taskModel.tasks.length,
                       itemBuilder: (context, index) {
                         return Dismissible(
-                          key: Key(tasks[index]), 
+                          key: Key(taskModel.tasks[index]), 
                           onDismissed: (direction) {
-                            setState(() {
-                              tasks.removeAt(index); 
-                            });
+                            taskModel.removeTask(index); // Remove a tarefa via Provider
                           },
                           background: Container(
                             color: Colors.red,
@@ -69,7 +62,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             child: Icon(Icons.delete, color: Colors.white),
                           ),
                           child: ListTile(
-                            title: Text(tasks[index]),
+                            title: Text(taskModel.tasks[index]),
                           ),
                         );
                       },

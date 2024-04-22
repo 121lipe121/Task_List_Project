@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import './provider/task_provider.dart';
 
 class AddTaskScreen extends StatelessWidget {
   @override
@@ -27,7 +29,8 @@ class AddTaskScreen extends StatelessWidget {
               onPressed: () {
                 String newTask = taskController.text.trim();
                 if (newTask.isNotEmpty) {
-                  Navigator.pop(context, newTask); // Enviar o texto de volta
+                  Provider.of<TaskModel>(context, listen: false).addTask(newTask);
+                  Navigator.pop(context); // Fecha a tela de adicionar tarefa
                 }
               },
               child: Icon(Icons.add),
